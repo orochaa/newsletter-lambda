@@ -1,0 +1,28 @@
+@baseUrl = https://1y5ao6gv70.execute-api.us-east-1.amazonaws.com
+
+POST {{baseUrl}}/subscribe HTTP/1.1
+content-type: application/json
+
+{
+  "email": "brunorocha2674@gmail.com"
+}
+
+###
+GET {{baseUrl}}/confirm-email HTTP/1.1
+
+###
+POST {{baseUrl}}/unsubscribe HTTP/1.1
+content-type: application/json
+
+{
+  "email": "brunorocha2674@gmail.com"
+}
+
+###
+POST {{baseUrl}}/send-email HTTP/1.1
+content-type: application/json
+
+{
+  "subject": "Test",
+  "body": "test"
+}

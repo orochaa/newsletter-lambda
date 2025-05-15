@@ -1,0 +1,30 @@
+{
+  "name": "newsletter",
+  "type": "module",
+  "scripts": {
+    "lint": "run-s lint:tsc lint:prettier lint:eslint",
+    "lint:eslint": "eslint --fix \"src/**/*.ts\"",
+    "lint:prettier": "prettier --write .",
+    "lint:tsc": "tsc --noEmit",
+    "deploy": "serverless deploy",
+    "clean": "serverless remove"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.810.0",
+    "@aws-sdk/client-ses": "^3.810.0",
+    "@aws-sdk/lib-dynamodb": "^3.810.0"
+  },
+  "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^5.2.2",
+    "@types/aws-lambda": "^8.10.149",
+    "@types/node": "^22.15.18",
+    "eslint": "^9.26.0",
+    "eslint-plugin-mist3rbru": "^0.6.4",
+    "npm-run-all2": "^8.0.1",
+    "prettier": "^3.5.3",
+    "serverless-dotenv-plugin": "^6.0.0",
+    "serverless-export-env": "^2.2.0",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3"
+  }
+}

@@ -1,0 +1,67 @@
+service: newsletter-api
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  environment:
+    SUBSCRIBER_TABLE: ${self:resources.Resources.SubscribersTable.Properties.TableName}
+    FROM_EMAIL: ${env:FROM_EMAIL}
+    BASE_URL: !Sub "https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com/${sls:stage}"
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - ses:SendEmail
+            - ses:SendRawEmail
+          Resource: '*'
+        - Effect: Allow
+          Action:
+            - dynamodb:PutItem
+            - dynamodb:GetItem
+            - dynamodb:Scan
+            - dynamodb:DeleteItem
+          Resource:
+            - !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/Subscribers
+
+functions:
+  api:
+    handler: src/router.handler
+    events:
+      - httpApi:
+          path: /subscribe
+          method: post
+      - httpApi:
+          path: /confirm-email
+          method: get
+      - httpApi:
+          path: /unsubscribe
+          method: post
+      - httpApi:
+          path: /send-email
+          method: post
+
+resources:
+  Resources:
+    SubscribersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Subscribers
+        AttributeDefinitions:
+          - AttributeName: token
+            AttributeType: S
+        KeySchema:
+          - AttributeName: token
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+
+outputs:
+  BaseUrl:
+    Value: !Sub "https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com/${sls:stage}"
+    Export:
+      Name: ${self:service}-${sls:stage}-BaseUrl
+
+plugins:
+  - serverless-dotenv-plugin
+  - serverless-export-env
